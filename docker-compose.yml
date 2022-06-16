@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  database:
+    image: postgres:14
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=121212
+      - POSTGRES_DB=dbserver
+    volumes:
+      - pgdata:/data/postgres
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    container_name: receitas
+    volumes:
+      - .:/usr/app
+    links:
+      - database
+    depends_on:
+      - database
+    ports: 
+      - "8000:8000"
+
+volumes:
+  pgdata:
+    driver: local
